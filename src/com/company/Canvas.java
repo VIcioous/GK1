@@ -4,9 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 
-public class Canvas extends JPanel {
+public class Canvas extends JPanel  {
     private final JButton lineButton = new JButton();
     private final JButton triangleButton = new JButton();
     private final JButton circleButton = new JButton();
@@ -25,19 +26,21 @@ public class Canvas extends JPanel {
     private int type = 0;
 
     private Figure figure;
-    private Point startPoint = null;
-    private Point endPoint = null;
+    private Point startPoint = new Point(0,0);
+    private Point endPoint = new Point(0,0);
 
     {
 
         addMouseListener(new MouseAdapter() {
+
             @Override
             public void mousePressed(MouseEvent e) {
                 startPoint = e.getPoint();
+                repaint();
             }
 
+            @Override
             public void mouseReleased(MouseEvent e) {
-
             }
         });
         addMouseMotionListener(new MouseMotionAdapter() {
@@ -45,6 +48,7 @@ public class Canvas extends JPanel {
             public void mouseDragged(MouseEvent e) {
                 endPoint = e.getPoint();
                 repaint();
+
             }
 
             @Override
@@ -60,13 +64,19 @@ public class Canvas extends JPanel {
         setButtons();
     }
 
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        Graphics2D graphics2D = (Graphics2D) g;
+        g.drawString("x1",460,35);
         if (startPoint != null) {
-            figure.draw(g, startPoint, endPoint);
+            figure.draw(graphics2D, startPoint, endPoint);
+
         }
         if (adding != null) {
-            figure.drawShape(g, drawDTO);
+            figure.drawShape(graphics2D, drawDTO);
+
             adding = null;
         }
     }
